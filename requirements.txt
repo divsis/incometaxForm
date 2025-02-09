@@ -1,0 +1,5 @@
+streamlit
+tempfile
+docx
+os 
+datetime

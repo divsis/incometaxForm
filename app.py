@@ -5,10 +5,7 @@ from datetime import date
 from docx.shared import Pt
 import datetime
 from docx import Document
-# Function to replace placeholders in a Word document
 TEMPLATE_PATH = os.path.abspath("testdoc.docx")
-from docx import Document
-from docx.shared import Pt
 
 def replace_placeholders(doc_path, replacements):
     doc = Document(doc_path)
