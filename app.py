@@ -244,6 +244,25 @@ with st.expander("Declaration"):
         date = st.date_input("Date")
         st.write(f"I, {name}, working as {designation}, declare that the information provided is correct to the best of my knowledge.")
 
+st.markdown("""
+    <style>
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: black;
+        }
+    </style>
+    <div class="footer">
+        © Created by divsis💝
+    </div>
+""", unsafe_allow_html=True)
+
      
     # Button to generate modified document
 if st.button("Generate Document"):
