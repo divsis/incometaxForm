@@ -1,5 +1,4 @@
 import streamlit as st
-import docx
 import tempfile
 import os
 from datetime import date
