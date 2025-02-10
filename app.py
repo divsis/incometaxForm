@@ -204,6 +204,7 @@ with st.expander("Tax Calculation"):
         st.write(f"Education Cess (4%): {educationCess}")  
         st.write(f"Total Tax Payable: {totalTax}")  
         st.write(f"Total Tax paid: {total_tax_paid}")  
+        st.write(f"Refund / Pay: {totalTax-total_tax_paid}")  
     
     # Declaration
 with st.expander("Declaration"):
