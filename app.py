@@ -98,7 +98,7 @@ with st.expander("Income Details "):
         standard_deduction = st.number_input("Standard Deduction (Upto 50000)", min_value=0.0, key="standard_deduction")
         professional_tax = st.number_input("Professional Tax", min_value=0.0, key="professional_tax",value=0.0)
         totalAtoF=basic_pay + agp + da + hra + arrears +others
-        total_income = basic_pay + agp + da + hra + arrears + incomeOtherSources - houseLoanInterest-(min(houseRent,excessRentPaid))-standard_deduction - professional_tax
+        total_income = basic_pay + agp + da + hra + arrears + others+ incomeOtherSources - houseLoanInterest-(min(houseRent,excessRentPaid))-standard_deduction - professional_tax
         st.write(f"Total Income: {total_income}")
     # Deduction Section
 with st.expander("80 C Deductions"):
