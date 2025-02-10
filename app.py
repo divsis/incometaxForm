@@ -5,6 +5,7 @@ from datetime import date
 from docx.shared import Pt
 import datetime
 from docx import Document
+import re
 TEMPLATE_PATH = os.path.abspath("testdoc.docx")
 
 def replace_placeholders(doc_path, replacements):
@@ -54,40 +55,10 @@ def replace_placeholders(doc_path, replacements):
                 replace_in_paragraph(para, replacements)
 
     return doc
-# def replace_placeholders(doc_path, replacements):
-    doc = Document(doc_path)
 
-    def replace_in_paragraph(para, replacements):
-        for run in para.runs:
-            for key, value in replacements.items():
-                if key in run.text:
-                    run.text = run.text.replace(key, str(value))
-                    run.font.bold = run.bold  # Retain bold if it was originally bold
-                    run.font.size = run.font.size or Pt(8)  # Preserve font size
-
-    # Replace placeholders in paragraphs
-    for para in doc.paragraphs:
-        replace_in_paragraph(para, replacements)
-
-    # Replace placeholders in tables, headers, and footers
-    for table in doc.tables:
-        for row in table.rows:
-            for cell in row.cells:
-                for para in cell.paragraphs:
-                    replace_in_paragraph(para, replacements)
-
-    for section in doc.sections:
-        for header in [section.header, section.first_page_header, section.even_page_header]:
-            for para in header.paragraphs:
-                replace_in_paragraph(para, replacements)
-        for footer in [section.footer, section.first_page_footer, section.even_page_footer]:
-            for para in footer.paragraphs:
-                replace_in_paragraph(para, replacements)
-
-    return doc
 
 # Streamlit UI
-st.title("📄 Modify Word Template - Income Tax Assessment")
+st.title("📄Income Tax Assessment")
 
 
 totalAtoF=0
