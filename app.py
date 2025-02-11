@@ -8,6 +8,7 @@ from docx import Document
 import re
 TEMPLATE_PATH = os.path.abspath("testdoc.docx")
 
+
 def replace_placeholders(doc_path, replacements):
     doc = Document(doc_path)
 
@@ -64,7 +65,13 @@ st.title("📄Income Tax Assessment")
 totalAtoF=0
 
 st.write("🔹 Enter Required Information")
-    
+
+
+isNew = st.toggle("Switch to New Form") 
+if(isNew):
+     st.header("New Regime Selected")
+     TEMPLATE_PATH = os.path.abspath("newform.docx")
+else : st.header("Old Regime Selected")
 with st.expander("Institute & Assessment Details"):
     institute_name = st.text_input("Institute Name")
     fin_year = st.text_input("Financial Year")
@@ -92,79 +99,137 @@ with st.expander("Income Details "):
         arrears = st.number_input("Other (Arrears)", min_value=0.0, key="arrears",value=0.0)
         others = st.number_input("Other Allowances", min_value=0.0, key="hra_2",value=0.0)  # Rename HRA duplicate
         incomeOtherSources = st.number_input("Income From other Sources", min_value=0.0, key="income_other_sources",value=0.0)
-        houseRent = st.number_input("Actual House Rent Received", min_value=0.0, key="house_rent",value=0.0)
-        excessRentPaid = st.number_input("Rent paid in excess of 10% of salary", min_value=0.0, key="excess_rent_paid",value=0.0)
-        houseLoanInterest = st.number_input("Less Interest of Loan upto Rs. 2,00,000/-", min_value=0.0, key="house_loan_interest",value=0.0)
-        standard_deduction = st.number_input("Standard Deduction (Upto 50000)", min_value=0.0, key="standard_deduction")
-        professional_tax = st.number_input("Professional Tax", min_value=0.0, key="professional_tax",value=0.0)
+        if(isNew):houseRent=0.0
+        else : houseRent = st.number_input("Actual House Rent Received", min_value=0.0, key="house_rent",value=0.0)
+        if(isNew):excessRentPaid=0.0
+        else :excessRentPaid = st.number_input("Rent paid in excess of 10% of salary", min_value=0.0, key="excess_rent_paid",value=0.0)
+        if(isNew):
+             houseLoanInterest=0.0
+        else : houseLoanInterest = st.number_input("Less Interest of Loan upto Rs. 2,00,000/-", min_value=0.0, key="house_loan_interest",value=0.0)
+        if(isNew):
+             standard_deduction = 75000.00
+             st.write("Standard Deduction (Upto 75000) = 750000")
+        else :
+             standard_deduction = 50000.00 
+             st.write("Standard Deduction (Upto 50000) = 50000")
+
+        if(isNew) : professional_tax=0.0
+        else :professional_tax = st.number_input("Professional Tax", min_value=0.0, key="professional_tax",value=0.0)
         totalAtoF=basic_pay + agp + da + hra + arrears +others
         total_income = basic_pay + agp + da + hra + arrears + others+ incomeOtherSources - houseLoanInterest-(min(houseRent,excessRentPaid))-standard_deduction - professional_tax
         st.write(f"Total Income: {total_income}")
     # Deduction Section
-with st.expander("80 C Deductions"):
-        lic = st.number_input("L.I.C.", min_value=0.0,value=0.0)
-        gpf = st.number_input("G.P.F./P.P.F./G.I.S.", min_value=0.0,value=0.0)
-        nsc = st.number_input("N.S.C.", min_value=0.0,value=0.0)
-        nsc_int = st.number_input("N.S.C. Accrued Interest", min_value=0.0,value=0.0)
-        home_loan_p = st.number_input("Repayment of House Loan (Principal)", min_value=0.0,value=0.0)
-        tuition_fee = st.number_input("Tuition Fees (Up to 2 Children)", min_value=0.0,value=0.0)
-        bank_fdr = st.number_input("Bank FDR (5-year)", min_value=0.0,value=0.0)
-        mutual_fund = st.number_input("Mutual Fund (3-year)", min_value=0.0,value=0.0)
-        nps = st.number_input("New Pension Scheme", min_value=0.0,value=0.0)
-        specify_other = st.text_input("Other Deduction (Specify)")
-        other = st.number_input("Other Deduction Amount", min_value=0.0,value=0.0)
-        total_deductions = lic + gpf + nsc + nsc_int + home_loan_p + tuition_fee + bank_fdr + mutual_fund + nps + other 
-        total_deductions=min(150000,total_deductions)
-        st.write(f"Deductions under 80C: {total_deductions}")
-
-with st.expander("Other Deductions"):
-        ccd80 = st.number_input("80CCD Investment in New Pension Scheme (other than 80C upto 50000/-", min_value=0.0,value=0.0)
-        d80 = st.number_input("80D Medical Insurance premium upto 25000/- (for Sr.Citizen) 50000/-", min_value=0.0,value=0.0)
-        dd80 = st.number_input("80DD Dependent Handicapped exemption upto 75000/-", min_value=0.0,value=0.0)
-        e80 = st.number_input("80E Interest of education loan", min_value=0.0,value=0.0)
-        u80 = st.number_input("80U Physically Handicapped Exemption upto 75000/-", min_value=0.0,value=0.0)
-        ttb80 = st.number_input("80TTB Interest of Saving & FD for Sr. Citizen upto 50000/-", min_value=0.0,value=0.0)
-        otherDeductions=ccd80+d80+dd80+e80+u80+ttb80
-        st.write(f"Other Deductions: {otherDeductions}")
+if(isNew):
+     total_deductions=0.0
+     otherDeductions=0.0
+     lic = gpf = nsc = nsc_int = home_loan_p = tuition_fee = bank_fdr = mutual_fund = nps = other = 0.0
+     ccd80 = d80 = dd80 = e80 = u80 = ttb80 = 0.0
+     specify_other=""
+else : 
+        with st.expander("80 C Deductions"):
+            lic = st.number_input("L.I.C.", min_value=0.0,value=0.0)
+            gpf = st.number_input("G.P.F./P.P.F./G.I.S.", min_value=0.0,value=0.0)
+            nsc = st.number_input("N.S.C.", min_value=0.0,value=0.0)
+            nsc_int = st.number_input("N.S.C. Accrued Interest", min_value=0.0,value=0.0)
+            home_loan_p = st.number_input("Repayment of House Loan (Principal)", min_value=0.0,value=0.0)
+            tuition_fee = st.number_input("Tuition Fees (Up to 2 Children)", min_value=0.0,value=0.0)
+            bank_fdr = st.number_input("Bank FDR (5-year)", min_value=0.0,value=0.0)
+            mutual_fund = st.number_input("Mutual Fund (3-year)", min_value=0.0,value=0.0)
+            nps = st.number_input("New Pension Scheme", min_value=0.0,value=0.0)
+            specify_other = st.text_input("Other Deduction (Specify)")
+            other = st.number_input("Other Deduction Amount", min_value=0.0,value=0.0)
+            total_deductions = lic + gpf + nsc + nsc_int + home_loan_p + tuition_fee + bank_fdr + mutual_fund + nps + other 
+            total_deductions=min(150000,total_deductions)
+            st.write(f"Deductions under 80C: {total_deductions}")
+        with st.expander("Other Deductions"):
+            ccd80 = st.number_input("80CCD Investment in New Pension Scheme (other than 80C upto 50000/-", min_value=0.0,value=0.0)
+            d80 = st.number_input("80D Medical Insurance premium upto 25000/- (for Sr.Citizen) 50000/-", min_value=0.0,value=0.0)
+            dd80 = st.number_input("80DD Dependent Handicapped exemption upto 75000/-", min_value=0.0,value=0.0)
+            e80 = st.number_input("80E Interest of education loan", min_value=0.0,value=0.0)
+            u80 = st.number_input("80U Physically Handicapped Exemption upto 75000/-", min_value=0.0,value=0.0)
+            ttb80 = st.number_input("80TTB Interest of Saving & FD for Sr. Citizen upto 50000/-", min_value=0.0,value=0.0)
+            otherDeductions=ccd80+d80+dd80+e80+u80+ttb80
+            st.write(f"Other Deductions: {otherDeductions}")    
     # Tax Calculation
 overallDeduction=total_deductions+otherDeductions
-st.write(f"Total Deductions: {overallDeduction}")
+if(isNew==False) : st.write(f"Total Deductions: {overallDeduction}")
 net_income = total_income - overallDeduction
 st.write(f"Net Taxable Income: {net_income}")
+if(isNew):
+        per5=0
+        per10=0
+        per15=0
+        per20=0
+        per30=0
+        per5s=0
+        tax=0
+        rebate=0
+        totalTax=0
+        educationCess=0
+        relief89 =0
+        if(net_income>300000 and net_income <= 700000):
+             rebate=20000
+             per5=(net_income-300000)*0.05
+             tax=per5
+        elif(net_income>700000 and net_income <=1000000):
+             per5=20000
+             per10=(net_income-700000)*0.1
+             tax=per5+per10
+        elif(net_income>1000000 and net_income <=1200000):
+             per5=20000
+             per10=30000
+             per15=(net_income-1000000)*0.15
+             tax=per5+per10+per15
+        elif(net_income>1200000 and net_income <=1500000):
+             per5=20000
+             per10=30000
+             per15=30000
+             per20=(net_income-1200000)*0.2
+             tax=per5+per10+per15+per20
+        elif(net_income>1500000 ):
+             per5=20000
+             per10=30000
+             per15=30000
+             per20=60000
+             per30=(net_income-1500000)*0.3
+             tax=per5+per10+per15+per20+per30
 
-per5=0
-per20=0
-per30=0
-tax=0
-rebate=0
-totalTax=0
-educationCess=0
-relief89 =0
-per5s=0
-today = date.today()
-age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-if(net_income<=250000):
-    tax=0
-elif(net_income>250000 and net_income<=500000 and age<=65 ):
-    per5=round((net_income-250000)*0.05)
-    tax=per5
-    rebate=12500
-elif(net_income>250000 and net_income<=500000 and age>65  ):
-    per5s=round((net_income-300000)*0.05)
-    per5=0
-    tax=per5
-    rebate =12500
-elif(net_income>500000 and net_income<=1000000 ):
-    per5=12500
-    if(age>65):per5s=12500
-    per20=round((net_income-500000)*0.2)
-    tax=per5+per20
-elif(net_income>1000000 ):
-    per5=12500
-    if(age>65):per5s=12500
-    per20=100000
-    per30=round((net_income-1000000)*0.3)
-    tax=per5+per20+per30
+else :
+        per5=0
+        per10=0
+        per15=0
+        per20=0
+        per30=0
+        tax=0
+        rebate=0
+        totalTax=0
+        educationCess=0
+        relief89 =0
+        per5s=0
+        today = date.today()
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        if(net_income<=250000):
+            tax=0
+        elif(net_income>250000 and net_income<=500000 and age<=59 ):
+            per5=round((net_income-250000)*0.05)
+            tax=per5
+            rebate=12500
+        elif(net_income>250000 and net_income<=500000 and age>=60  ):
+            per5s=round((net_income-300000)*0.05)
+            per5=0
+            tax=per5
+            rebate =12500
+        elif(net_income>500000 and net_income<=1000000 ):
+            per5=12500
+            if(age>65):per5s=12500
+            per20=round((net_income-500000)*0.2)
+            tax=per5+per20
+        elif(net_income>1000000 ):
+            per5=12500
+            if(age>65):per5s=12500
+            per20=100000
+            per30=round((net_income-1000000)*0.3)
+            tax=per5+per20+per30
     
 balance=tax-rebate
 payableTax=balance;
@@ -199,7 +264,8 @@ replacements = {
 toPay=totalTax-total_tax_paid
 with st.expander("Tax Calculation"):
         st.write(f"Total Tax On Income: {tax}")   
-        st.write(f"Tax Rebate of Rs. 12500/- (u/s 87A for NTI ) Taxable Income is Rs.500000/ or Less: {rebate}")  
+        if(isNew):st.write(f"Tax Rebate of Rs. 20000/- (u/s 87A for NTI ) Taxable Income is Rs.700000/ or Less: {rebate}")  
+        else :st.write(f"Tax Rebate of Rs. 12500/- (u/s 87A for NTI ) Taxable Income is Rs.500000/ or Less: {rebate}")
         st.write(f"Balance Tax payable: {payableTax}")  
         st.write(f"Education Cess (4%): {educationCess}")  
         st.write(f"Total Tax Payable: {totalTax}")  
@@ -266,7 +332,9 @@ if st.button("Generate Document"):
             "{{incomeOtherSources}}": str(round(incomeOtherSources)),
             "{{houseLoanInterest}}": str(round(houseLoanInterest)),
             "{{5per}}": str(round(per5)),
+            "{{10per}}": str(round(per10)),
             "{{5perS}}": str(round(per5s)),
+            "{{15per}}": str(round(per15)),
             "{{20per}}": str(round(per20)),
             "{{30per}}": str(round(per30)),
             "{{totalTax}}": str(round(tax)),
