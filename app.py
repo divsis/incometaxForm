@@ -236,7 +236,7 @@ payableTax=balance;
 if(payableTax<0):
     payableTax=0
 educationCess=round(0.04*payableTax)
-totalTax=tax+educationCess
+totalTax=payableTax+educationCess
    
    
 
