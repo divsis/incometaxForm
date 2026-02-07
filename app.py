@@ -92,12 +92,18 @@ with st.expander("Employee Details"):
         address = st.text_area("Residence Address")
     
 with st.expander("Income Details "):
-        basic_pay = st.number_input("Basic/Spl. Pay", min_value=0.0, key="basic_pay")
-        agp = st.number_input("A.G.P.", min_value=0.0, key="agp",value=0.0)
-        da = st.number_input("Dearness Allowance", min_value=0.0, key="da")
-        hra = st.number_input("H.R.A.", min_value=0.0, key="hra_1",value=0.0)
+        if(isNew):
+             basic_pay = st.number_input("Gross Salary", min_value=0.0, key="basic_pay")
+        else : basic_pay = st.number_input("Basic/Spl. Pay", min_value=0.0, key="basic_pay")
+        if(isNew):agp=0.0
+        else :agp = st.number_input("A.G.P.", min_value=0.0, key="agp",value=0.0)
+        if(isNew):da=0.0
+        else : da = st.number_input("Dearness Allowance", min_value=0.0, key="da")
+        if(isNew):hra=0.0
+        else : hra = st.number_input("H.R.A.", min_value=0.0, key="hra_1",value=0.0)
         arrears = st.number_input("Other (Arrears)", min_value=0.0, key="arrears",value=0.0)
-        others = st.number_input("Other Allowances", min_value=0.0, key="hra_2",value=0.0)  # Rename HRA duplicate
+        if(isNew):others=0.0
+        else : others = st.number_input("Other Allowances", min_value=0.0, key="hra_2",value=0.0)  # Rename HRA duplicate
         incomeOtherSources = st.number_input("Income From other Sources", min_value=0.0, key="income_other_sources",value=0.0)
         if(isNew):houseRent=0.0
         else : houseRent = st.number_input("Actual House Rent Received", min_value=0.0, key="house_rent",value=0.0)
@@ -160,6 +166,7 @@ if(isNew):
         per10=0
         per15=0
         per20=0
+        per25=0
         per30=0
         per5s=0
         tax=0
@@ -167,32 +174,41 @@ if(isNew):
         totalTax=0
         educationCess=0
         relief89 =0
-        if(net_income>300000 and net_income <= 700000):
-             rebate=20000
-             per5=(net_income-300000)*0.05
+        if(net_income>400000 and net_income <= 800000):
+             rebate=60000
+             per5=(net_income-400000)*0.05
              tax=per5
-        elif(net_income>700000 and net_income <=1000000):
+        elif(net_income>800000 and net_income <=1200000):
+             rebate=60000
              per5=20000
-             per10=(net_income-700000)*0.1
+             per10=(net_income-800000)*0.1
              tax=per5+per10
-        elif(net_income>1000000 and net_income <=1200000):
+        elif(net_income>1200000 and net_income <=1600000):
              per5=20000
-             per10=30000
-             per15=(net_income-1000000)*0.15
+             per10=40000
+             per15=(net_income-1200000)*0.15
              tax=per5+per10+per15
-        elif(net_income>1200000 and net_income <=1500000):
+        elif(net_income>1600000 and net_income <=2000000):
              per5=20000
-             per10=30000
-             per15=30000
-             per20=(net_income-1200000)*0.2
+             per10=40000
+             per15=60000
+             per20=(net_income-1600000)*0.2
              tax=per5+per10+per15+per20
-        elif(net_income>1500000 ):
+        elif(net_income>2000000 and net_income <=2400000):
              per5=20000
-             per10=30000
-             per15=30000
-             per20=60000
-             per30=(net_income-1500000)*0.3
-             tax=per5+per10+per15+per20+per30
+             per10=40000
+             per15=60000
+             per20=80000    
+             per25=(net_income-2000000)*0.25
+             tax=per5+per10+per15+per20+per25
+        elif(net_income>2400000 ):
+             per5=20000
+             per10=40000
+             per15=60000
+             per20=80000
+             per25=100000
+             per30=(net_income-2400000)*0.3
+             tax=per5+per10+per15+per20+per25+per30
 
 else :
         per5=0
@@ -336,6 +352,7 @@ if st.button("Generate Document"):
             "{{5perS}}": str(round(per5s)),
             "{{15per}}": str(round(per15)),
             "{{20per}}": str(round(per20)),
+            "{{25per}}": str(round(per25)),
             "{{30per}}": str(round(per30)),
             "{{totalTax}}": str(round(tax)),
             "{{rebate}}": str(round(rebate)),
