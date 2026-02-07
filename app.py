@@ -66,8 +66,8 @@ totalAtoF=0
 
 st.write("🔹 Enter Required Information")
 
-
-isNew = st.toggle("Switch to New Regime") 
+isNew=True
+isNew = not(st.toggle("Switch to Old Regime")) 
 if(isNew):
      st.header("New Regime Selected")
      TEMPLATE_PATH = os.path.abspath("newform.docx")
