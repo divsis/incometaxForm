@@ -92,18 +92,12 @@ with st.expander("Employee Details"):
         address = st.text_area("Residence Address")
     
 with st.expander("Income Details "):
-        if(isNew):
-             basic_pay = st.number_input("Gross Salary", min_value=0.0, key="basic_pay")
-        else : basic_pay = st.number_input("Basic/Spl. Pay", min_value=0.0, key="basic_pay")
-        if(isNew):agp=0.0
-        else :agp = st.number_input("A.G.P.", min_value=0.0, key="agp",value=0.0)
-        if(isNew):da=0.0
-        else : da = st.number_input("Dearness Allowance", min_value=0.0, key="da")
-        if(isNew):hra=0.0
-        else : hra = st.number_input("H.R.A.", min_value=0.0, key="hra_1",value=0.0)
-        arrears = st.number_input("Other (Arrears)", min_value=0.0, key="arrears",value=0.0)
-        if(isNew):others=0.0
-        else : others = st.number_input("Other Allowances", min_value=0.0, key="hra_2",value=0.0)  # Rename HRA duplicate
+        basic_pay = st.number_input("Basic/Spl. Pay", min_value=0.0, key="basic_pay")
+        agp = st.number_input("A.G.P.", min_value=0.0, key="agp",value=0.0)
+        da = st.number_input("Dearness Allowance", min_value=0.0, key="da")
+        hra = st.number_input("H.R.A.", min_value=0.0, key="hra_1",value=0.0)
+        arrears = st.number_input("Arrears (if any)", min_value=0.0, key="arrears",value=0.0)
+        others = st.number_input("Other Allowances", min_value=0.0, key="hra_2",value=0.0)  # Rename HRA duplicate
         incomeOtherSources = st.number_input("Income From other Sources", min_value=0.0, key="income_other_sources",value=0.0)
         if(isNew):houseRent=0.0
         else : houseRent = st.number_input("Actual House Rent Received", min_value=0.0, key="house_rent",value=0.0)
